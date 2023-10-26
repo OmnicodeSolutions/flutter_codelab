@@ -35,11 +35,11 @@ class MyAppState extends ChangeNotifier {
 
   var favorites = <WordPair>[];
 
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
+  void toggleFavorite(WordPair wordPair) {
+    if (favorites.contains(wordPair)) {
+      favorites.remove(wordPair);
     } else {
-      favorites.add(current);
+      favorites.add(wordPair);
     }
     notifyListeners();
   }
@@ -131,7 +131,7 @@ class GeneratorPage extends StatelessWidget {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  appState.toggleFavorite();
+                  appState.toggleFavorite(pair);
                 },
                 icon: Icon(icon),
                 label: Text('Like'),
@@ -157,7 +157,6 @@ class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    final theme = Theme.of(context);
 
     if (appState.favorites.isEmpty) {
       return Center(
@@ -174,10 +173,19 @@ class FavoritesPage extends StatelessWidget {
         ),
         for (var pair in appState.favorites)
           ListTile(
-            leading: Icon(
-              Icons.favorite,
-              color: theme.colorScheme.primary,
+            leading: TextButton(
+              onPressed: () {
+                appState.toggleFavorite(pair);
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: MaterialStateColor.resolveWith(
+                    (states) => Theme.of(context).colorScheme.primaryContainer),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+              ),
+              child: Icon(Icons.favorite),
             ),
+            horizontalTitleGap: 0,
             title: Text(pair.asLowerCase),
           ),
       ],
