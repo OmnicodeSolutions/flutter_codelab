@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./ci_integration
+        working-directory: /ci_integration
     steps:
       # Set up Flutter.
       - name: Clone Flutter repository with master channel
