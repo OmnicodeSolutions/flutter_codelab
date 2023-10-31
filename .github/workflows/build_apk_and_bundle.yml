@@ -12,9 +12,6 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: /ci_integration
     permissions:
       contents: write
 
@@ -29,14 +26,17 @@ jobs:
       - run: flutter doctor -v
 
       # Checkout the repository code and get packages.
+      - uses: actions/checkout@v3
       - name: Checkout flutter_app code
-        uses: actions/checkout@v3
-      - run: flutter pub get
+        working-directory: ./ci_integration
+        run: flutter pub get
 
       - name: Build APK
+        working-directory: ./ci_integration
         run: flutter build apk --split-per-abi --release
 
       - name: Build APP BUNDLE
+        working-directory: ./ci_integration
         run: flutter build appbundle
 
       - name: Create Release

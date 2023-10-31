@@ -12,25 +12,26 @@ jobs:
   unit-test:
     name: Unit tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: /ci_integration
     steps:
       # Set up Flutter.
+      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
       - name: Clone Flutter repository with master channel
-        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
-        with:
-          channel: master
-      - run: flutter doctor -v
+        working-directory: ./ci_integration
+        run: flutter doctor -v
 
       # Checkout gallery code and get packages.
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
       - name: Checkout gallery code
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
-      - run: flutter pub get
+        working-directory: ./ci_integration
+        run: flutter pub get
 
       # Analyze, check formatting, and run unit tests.
-      - run: flutter analyze
+      - name: Analyze
+        working-directory: ./ci_integration
+        run: flutter analyze
       - name: Ensure the Dart code is formatted correctly
+        working-directory: ./ci_integration
         run: dart format --set-exit-if-changed .
       - name: Run Flutter unit tests
+        working-directory: ./ci_integration
         run: flutter test
